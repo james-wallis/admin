@@ -8,8 +8,8 @@ COPY package.json /app/package.json
 WORKDIR /app
 RUN npm install
 COPY app /app
-ENV PORT=5000
-EXPOSE 5000
+ENV PORT=4050
+EXPOSE 4050
 
 COPY test/docker-compose.yaml /app/docker-compose.yaml
 
