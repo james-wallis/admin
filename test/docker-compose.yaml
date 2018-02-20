@@ -1,0 +1,11 @@
+version: "3"
+services:
+  website:
+    image: jamesemwallis/james-wallis.com
+    container_name: james-wallis.com
+    ports:
+    - 9000:80
+
+  slider:
+    image: jamesemwallis/salsa_mish_image_slider
+    container_name: salsa_slider

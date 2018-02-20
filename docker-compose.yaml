@@ -1,0 +1,9 @@
+version: "3"
+services:
+  admin:
+    image: jamesemwallis/admin
+    container_name: admin
+    ports:
+      - 5000:5000
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock/
