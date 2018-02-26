@@ -6,17 +6,110 @@
     <meta name="description" content="The admin dashboard for james-wallis.com">
     <meta name="author" content="James Wallis">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400" rel="stylesheet">
+    <link rel="stylesheet" href="bootstrap.min.css">
     <link rel="stylesheet" href="stylesheet.css">
     <!-- <link rel="icon" type="image/png" href="images/favicon.png"> -->
   </head>
   <body>
-    <h1>Admin</h1>
+    <div class="container-fluid">
+      <div class="row ignore-height">
+        <header class="w-100">
+          <div class="row">
+            <div id="header-left" class="col-4">
+              <!-- <i class="fal fa-tachometer-alt"></i> -->
+              <i class="fab fa-docker"></i>
+              <h1>Admin Dashboard</h1>
+            </div>
+            <div id="header-right" class="col-8">
+              <h2>james-wallis.com</h2>
+            </div>
+          </div>
+        </header>
+      </div>
+
+      <div class="row">
+        <div id="docker" class="col">
+          <div id="docker-header">
+            <h3>Control Panel</h3>
+          </div>
+          <div id="docker-content">
+            <div class="row">
+              <div class="col">
+                <button type="button" class="btn btn-outline-dark">Pull Images</button>
+              </div>
+              <div class="col">
+                <button type="button" class="btn btn-outline-dark">Update</button>
+              </div>
+              <div class="col">
+                <button type="button" class="btn btn-outline-danger">Restart</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div id="system-header">
+            <h3>System Information</h3>
+          </div>
+          <div id="system-content">
+
+          </div>
+        </div>
+        <div class="col">
+          <div id="overview-header">
+            <h3>Overview</h3>
+          </div>
+          <div id="overview-content">
+
+          </div>
+        </div>
+      </div>
+      <div class="row">
+
+        <div id="images" class="col">
+          <h3>Images</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Names</th>
+                <th scope="col">Created</th>
+                <th scope="col">Size</th>
+              </tr>
+            </thead>
+            <tbody id="images-table-body">
+              <tr>
+
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="containers" class="col">
+          <h3>Running Containers</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Names</th>
+                <th scope="col">Created</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </body>
   <script src="/socket.io/socket.io.js"></script>
   <script>var socket = io();</script>
-  <script type="text/javascript">
-    socket.emit('dc-pull');
-  </script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
   <script type="text/javascript" src="scripts.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="fa.js"></script>
+  <script type="text/javascript" src="bootstrap.min.js"></script>
 </html>

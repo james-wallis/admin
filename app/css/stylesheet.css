@@ -1,0 +1,136 @@
+*, html, body {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background-color: #f9fafb !important;
+  font-family: Roboto,-apple-system,system-ui,BlinkMacSystemFont,Segoe UI,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,Arial,sans-serif;
+}
+
+header {
+  background-color: #fff;
+  height: calc(10vh - 10px);
+  line-height: calc(10vh - 10px);
+  border-bottom: 1px solid rgba(0,0,0,.0625);
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: rgba(0, 0, 0, 0.063);
+  margin-bottom: 10px;
+}
+
+header #header-left {
+  text-align: left;
+}
+
+header #header-left i, header #header-left svg {
+  margin-left: 15px;
+}
+
+header #header-left h1 {
+  margin-left: 5px;
+  font-size: 16px;
+  display: inline-block;
+}
+
+header #header-right {
+  text-align: right;
+}
+
+header #header-right h2 {
+  color: #666;
+  font-weight: 300;
+  margin-right: 15px;
+  font-size: 16px;
+  display: inline-block;
+}
+
+.row {
+  height: 65vh;
+}
+
+/* Header row */
+.row:first-child {
+  height: auto;
+}
+
+.row:nth-child(2) {
+  height: 25vh;
+}
+
+.col {
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.063);
+  margin: 10px;
+  padding: 0;
+}
+
+h3 {
+  font-size: 18px;
+  padding: 10px;
+  text-align: center;
+  color: #fff;
+}
+
+#docker-header {
+  background-color: rgb(7, 124, 188);
+}
+
+#docker-content .row {
+  height: auto;
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+#docker-content .col {
+  height: auto;
+  border: none;
+}
+
+#docker-content button {
+  display: inherit;
+  margin: 0 auto;
+}
+
+#overview-header {
+  background-color: rgb(248, 108, 107);
+}
+
+#system-header {
+  background-color: #795548;
+}
+
+#system-content {
+
+}
+
+#images h3 {
+  text-align: center;
+  padding: 20px;
+  font-size: 18px;
+  background-color: #28a745;
+  color: white;
+  margin-bottom: 0;
+}
+
+#containers h3 {
+  text-align: center;
+  padding: 20px;
+  font-size: 18px;
+  background-color: #ffc107;
+  color: white;
+  margin-bottom: 0;
+}
+
+.table td, .table th {
+  padding: 5px;
+  font-size: 14px;
+}
+
+p {
+  text-align: center;
+  padding: 0;
+  margin: 0;
+  font-size: 14px;
+}
