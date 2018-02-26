@@ -5,6 +5,7 @@ const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
+app.use(express.cookieParser());
 app.use(express.static(__dirname + '/css'));
 app.use(express.static(__dirname + '/js'));
 
@@ -27,12 +28,25 @@ var dockerImages = [];
 var dockerInfo = {};
 var content = {
   images: '',
+  containers: '',
   system: ''
 };
 
 // Serve dashboard page
 app.get('/', function(req, res) {
+  // if (req.cookies.dashboard_authenticated) {
+  // // check valid cookie and send dashboard
+  //  res.sendFile(__dirname + '/dashboard.html');
+  // } else {
+  // // Need to create cookie
+  // Create cookie, create random string, add it to the cookie list - helps verify that I've set the cookie
+  // }
   res.sendFile(__dirname + '/dashboard.html');
+});
+
+// Redirect to single page
+app.all('*', function(req, res) {
+  res.redirect("/");
 });
 
 
