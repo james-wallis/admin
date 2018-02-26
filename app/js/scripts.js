@@ -24,7 +24,6 @@ function showImages(images) {
       let memory = images[i].size/1000000;
       memory = Math.round(memory);
       let date = formatDate(images[i].creation);
-      // let stringDate = date.getDay() + '/' + date.getMonth() + '/' + date.getYear();
       let row = '';
       row += '<tr>';
       row += '<td>' + names + '</td>';
@@ -61,9 +60,28 @@ function showSystem(content) {
   $('#system-content').html(html);
 }
 
+// Show containers information
+function showContainers(content) {
+  let html = '';
+  for (let i = 0; i < content.length; i++) {
+    let memory = content[i].size/1000000;
+    memory = Math.round(memory);
+    let date = formatDate(content[i].creation);
+    let row = '';
+    row += '<tr>';
+    row += '<td>' + content[i].name + '</td>';
+    row += '<td>' + date + '</td>';
+    row += '<td>' + content[i].status + '</td>';
+    row += '</tr>';
+    html += row;
+  }
+  $('#containers-table-body').html(html);
+}
+
 function showDashboard(content) {
   console.log(content);
   showImages(content.images);
   showOverview(content.system);
   showSystem(content.system);
+  showContainers(content.containers);
 }

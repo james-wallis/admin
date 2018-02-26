@@ -128,10 +128,9 @@ function getDockerInfo() {
 
 // Get running Docker containers
 function getDockerContainers() {
-  docker.listContainers(function (err, containers) {
+  docker.listContainers({all: true}, function (err, containers) {
     let tempList = [];
     for (let i = 0; i < containers.length; i++) {
-      console.log(containers.length);
       let cont = docker.getContainer(containers[i].Id);
       cont.inspect(function(err, data) {
         let name = data.Name;
