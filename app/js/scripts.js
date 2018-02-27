@@ -51,12 +51,13 @@ function showOverview(content) {
 function showSystem(content) {
   let html = '';
   let memory = content.mem/1000000;
+  let date = formatDate(content.time);
   memory = Math.round(memory);
   html += '<p>OS: ' + content.os + '</p>';
   html += '<p>Docker Version: ' + content.version + '</p>';
   html += '<p>Number of CPUs: ' + content.cpu + '</p>';
   html += '<p>Memory: ' + memory + 'MB</p>';
-  html += '<p>Time: ' + content.time + '</p>';
+  html += '<p>Date: ' + date + '</p>';
   $('#system-content').html(html);
 }
 
