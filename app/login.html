@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Admin</title>
+    <meta name="description" content="Login page for the james-wallis.com admin dashboard">
+    <meta name="author" content="James Wallis">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400" rel="stylesheet">
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="stylesheet.css">
+    <link rel="stylesheet" href="login.css">
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row ignore-height">
+        <header class="w-100">
+          <div class="row">
+            <div id="header-left" class="col-4">
+              <i class="fab fa-docker"></i>
+              <h1>Admin Dashboard</h1>
+            </div>
+            <div id="header-right" class="col-8">
+              <h2>james-wallis.com</h2>
+            </div>
+          </div>
+        </header>
+      </div>
+      <div class="row justify-content-center align-items-center login-row">
+        <div class="col-6 login-container">
+          <form>
+            <div class="form-group">
+              <label for="login-user">Username</label>
+              <input name="username" type="text" class="form-control" id="login-username" aria-describedby="userHelp">
+              <small id="userHelp" class="form-text text-muted">There can only be one.</small>
+              <div class="invalid-feedback">
+                Please enter a valid username.
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input name="password" type="password" class="form-control" id="login-password">
+              <div class="invalid-feedback">
+                Incorrect password.
+              </div>
+            </div>
+            <button id="login-submit" type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="login.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="fa.js"></script>
+  <script type="text/javascript" src="bootstrap.min.js"></script>
+</html>

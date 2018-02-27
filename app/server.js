@@ -1,11 +1,15 @@
 const Docker = require('dockerode');
 const docker = new Docker();
 const express = require('express');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
-app.use(express.cookieParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(express.static(__dirname + '/css'));
 app.use(express.static(__dirname + '/js'));
 
@@ -22,6 +26,7 @@ const compose = new Compose({
 });
 
 // Globals
+var validCookies = [];
 var scanInterval;
 var scanning = false;
 var dockerImages = [];
@@ -34,19 +39,38 @@ var content = {
 
 // Serve dashboard page
 app.get('/', function(req, res) {
-  // if (req.cookies.dashboard_authenticated) {
-  // // check valid cookie and send dashboard
-  //  res.sendFile(__dirname + '/dashboard.html');
-  // } else {
-  // // Need to create cookie
+  let cookie = req.cookies.dashboard_authenticated;
+  if (cookie && validCookies.indexOf(cookie.toString()) > -1) {
+  // check valid cookie and send dashboard
+   res.sendFile(__dirname + '/dashboard.html');
+  } else {
+  // Need to create cookie
   // Create cookie, create random string, add it to the cookie list - helps verify that I've set the cookie
-  // }
-  res.sendFile(__dirname + '/dashboard.html');
+  res.sendFile(__dirname + '/login.html');
+  }
+});
+
+app.post('/api/v1/login', function(req, res) {
+  let username = req.body.username;
+  let password = req.body.password;
+  let expectedUsername = process.env.ADMIN_USERNAME;
+  let expectedPassword = process.env.ADMIN_PASSWORD;
+  if (username === expectedUsername && password === expectedPassword) {
+    let rand=Math.random().toString();
+    rand=rand.substring(2, rand.length);
+    validCookies.push(rand);
+    res.cookie('dashboard_authenticated', rand, { maxAge: 900000, httpOnly: true });
+    res.status(200).send('correct');
+  } else if (username === expectedUsername) {
+    res.status(200).send('only username correct');
+  } else {
+    res.status(200).send('invalid');
+  }
 });
 
 // Redirect to single page
 app.all('*', function(req, res) {
-  res.redirect("/");
+  res.redirect('/');
 });
 
 
