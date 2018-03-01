@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
+require('console-stamp')(console, '[dd:mm:yy HH:MM:ss]');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -98,6 +99,7 @@ function shouldIScan(noUsers) {
     scan();
   } else if (noUsers == 0) {
     clearInterval(scanInterval);
+    scanning = false;
     return;
   }
   send();
@@ -105,6 +107,7 @@ function shouldIScan(noUsers) {
 
 // Function to set off the functions below and set a timer to do it again
 function scan() {
+  console.log('scanning');
   getDockerImages();
   getDockerInfo();
   getDockerContainers();
