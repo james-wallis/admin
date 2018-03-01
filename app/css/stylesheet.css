@@ -66,14 +66,12 @@ header #header-right h2 {
 }
 
 h3 {
-  font-size: 18px;
-  padding: 10px;
-  text-align: center;
-  color: #fff;
-}
-
-#docker-header {
-  background-color: rgb(7, 124, 188);
+  font-size: 15px;
+  color: #72777a;
+  letter-spacing: .3px;
+  padding: 20px;
+  text-align: left;
+  margin: 0;
 }
 
 #docker-content .row {
@@ -93,44 +91,53 @@ h3 {
   margin: 0 auto;
 }
 
-#overview-header {
-  background-color: rgb(248, 108, 107);
-}
-
-#system-header {
-  background-color: #795548;
-}
-
-#system-content {
-
-}
-
 #images h3 {
-  text-align: center;
+  text-align: left;
   padding: 20px;
-  font-size: 18px;
-  background-color: #28a745;
-  color: white;
+  /* background-color: #28a745; */
   margin-bottom: 0;
 }
 
 #containers h3 {
-  text-align: center;
   padding: 20px;
-  font-size: 18px;
-  background-color: #ffc107;
-  color: white;
+  /* background-color: #ffc107; */
   margin-bottom: 0;
 }
 
+.table {
+  margin-left: 20px;
+  width: calc(100% - 40px);
+  color: #72777a;
+}
+
+.table th {
+  border-top: 0;
+}
+
+.table tr {
+  border: 0;
+  border-top: rgba(0, 0, 0, 0.063);
+}
+
+.table thead th {
+  border-bottom: 1px solid #dee2e6;
+  font-weight: 400;
+}
+
 .table td, .table th {
-  padding: 5px;
+  border-bottom: 1px solid #dee2e6;
+  padding: 0px;
+  padding-bottom: 3px;
+  padding-top: 3px;
   font-size: 14px;
+  font-weight: 300;
 }
 
 p {
-  text-align: center;
-  padding: 0;
+  text-align: left;
+  padding: 0 20px;
   margin: 0;
   font-size: 14px;
+  font-weight: 300;
+  color: #72777a;
 }

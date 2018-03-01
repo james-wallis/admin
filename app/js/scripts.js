@@ -26,9 +26,9 @@ function showImages(images) {
       let date = formatDate(images[i].creation);
       let row = '';
       row += '<tr>';
-      row += '<td>' + names + '</td>';
-      row += '<td>' + date + '</td>';
-      row += '<td>' + memory + 'MB</td>';
+      row += '<td style="width=70%">' + names + '</td>';
+      row += '<td style="width=30%">' + date + '</td>';
+      // row += '<td>' + memory + 'MB</td>';
       row += '</tr>';
       html += row;
     }
