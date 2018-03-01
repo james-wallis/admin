@@ -1,5 +1,6 @@
 # admin
 The admin dashboard for james-wallis.com
+![Screenshot of the admin dashboard](docs/dashboard-screenshot.png "Screenshot of the admin dashboard")
 
 ## Purpose
 To provide an easy way to monitor and configure my Digital Ocean server which runs uses [Docker](https://www.docker.com/) and [Traefik](https://traefik.io/) to run my website and other applications.
