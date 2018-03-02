@@ -1,5 +1,6 @@
 const { exec } = require('child_process');
 const path = require('path');
+const dockerCompose = 'docker-compose ';
 
 /**
  * Create the docker-compose object
@@ -7,8 +8,10 @@ const path = require('path');
  */
 var Compose = function(opts) {
   var self = this;
-  this.file = opts.file || '';
-  this.projectName = opts.projectName || '';
+  if (opts) {
+    this.file = opts.file || '';
+    this.project_name = opts.project_name || '';
+  }
 }
 
 /**
@@ -16,38 +19,44 @@ var Compose = function(opts) {
  * @param {String} command, the docker-compose command to execute
  */
 Compose.prototype.cmd = function(command, opts, callback) {
-  let dcCommand = 'docker-compose ';
-  if (this.file !== '') dcCommand += '-f ' + this.file + ' ';
-  if (this.projectName !== '') dcCommand += '-p ' + this.projectName + ' ';
-  dcCommand += command;
-  console.log(dcCommand);
-  exec(dcCommand, function(error, stdout, stderr) {
-    if (error) {
-      console.error(`exec error: ${error}`);
-      return;
-    }
-    console.log(`stdout: ${stdout}`);
-    console.log(`stderr: ${stderr}`);
-    if (callback && typeof callback === 'function') {
-      callback();
-    }
-  });
+  console.log(this);
+  return;
+  let dc = dockerCompose;
+  if (this.file !== '' && this.file) dc += '-f ' + this.file + ' ';
+  if (this.project_name !== '' && this.project_name) dc += '-p ' + this.project_name + ' ';
+  dc += command;
+  // if opts is a function then assign it to callback
+  if (typeof opts === 'function') {
+    callback = opts;
+  // if opts is an array with a length of more than 0 change it to a string
+  } else if (opts.length > 0){
+    opts = opts.join(' ');
+  // else set opts to a blank string so it doesn't mess up the command
+  } else {
+    opts = '';
+  }
+  dc += ` ${opts}`;
+  console.log(dc);
+  exec(dc, callback);
 }
 
 /**
  * Function to build the docker-compose images
  * @param {Object} opts, Options (optional)
- * @param {Function} callback
- *
- * Command line options:
- * --force-rm              Always remove intermediate containers.
- * --no-cache              Do not use cache when building the image.
- * --pull                  Always attempt to pull a newer version of the image.
- * -m, --memory MEM        Sets memory limit for the bulid container.
- * --build-arg key=val     Set build-time variables for one service.
+ * @param {Function} callback, A callback function (optional)
  */
 Compose.prototype.build = function(opts, callback) {
-  this.cmd('build', opts, callback);
+  let args = [];
+  if (opts && opts.force_rm) args.push('--force-rm');
+  if (opts && opts.no_cache) args.push('--no-cache');
+  if (opts && opts.pull) args.push('--pull');
+  if (opts && opts.memory) args.push(`--memory=${opts.memory}`);
+  if (opts && opts.build_args) {
+    for (field in opts.build_args) {
+      args.push(`--build-arg ${field}=${opts.build_args[field]}`);
+    }
+  }
+  this.cmd('build', args, callback);
 }
 
 /**
