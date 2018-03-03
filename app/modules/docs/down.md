@@ -9,10 +9,10 @@ For more information see the [docker-compose docs](https://docs.docker.com/compo
 * callback, A callback function (optional)
 
 **Supported options (docker-compose command line arguments)**
-* --rmi type              Remove images.
-* -v, --volumes           Remove named volumes.
-* --remove-orphans        Remove containers.
-* -t, --timeout TIMEOUT   Specify a shutdown timeout in seconds.
+* --rmi type, *Remove images.*
+* -v, --volumes, *Remove named volumes.*
+* --remove-orphans, *Remove containers.*
+* -t, --timeout TIMEOUT, *Specify a shutdown timeout in seconds.*
 
 ## Examples
 

@@ -9,11 +9,11 @@ For more information see the [docker-compose docs](https://docs.docker.com/compo
 * callback, A callback function (optional)
 
 **Supported options (docker-compose command line arguments)**
-* --force-rm              Always remove intermediate containers.
-* --no-cache              Do not use cache when building the image.
-* --pull                  Always attempt to pull a newer version of the image.
-* -m, --memory MEM        Sets memory limit for the build container.
-* --build-arg key=val     Set build-time variables for one service.
+* --force-rm, *Always remove intermediate containers.*
+* --no-cache, *Do not use cache when building the image.*
+* --pull, *Always attempt to pull a newer version of the image.*
+* -m, --memory MEM, *Sets memory limit for the build container.*
+* --build-arg key=val, *Set build-time variables for one service.*
 
 ## Examples
 
