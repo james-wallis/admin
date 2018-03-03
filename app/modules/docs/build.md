@@ -1,7 +1,8 @@
 # docker-compose build
 
 Build or rebuild services.
-[Docs for docker-compose build](https://docs.docker.com/compose/reference/build/)
+
+[Docs for docker-compose build.](https://docs.docker.com/compose/reference/build/)
 
 **Parameters**
 * opts, Options (optional)
@@ -33,15 +34,13 @@ const compose = new Compose({
 });
 
 let options = {
-  let opts = {
-     force_rm: true,
-     no_cache: true,
-     pull: true,
-     memory: 400,
-     build_args: {
-       field: value,
-       field: value
-     }
+   force_rm: true,
+   no_cache: true,
+   pull: true,
+   memory: 400,
+   build_args: {
+     field: value,
+     field: value
    }
 }
 compose.build(options);
