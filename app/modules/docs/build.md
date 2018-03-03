@@ -2,7 +2,7 @@
 
 Build or rebuild services.
 
-[Docs for docker-compose build.](https://docs.docker.com/compose/reference/build/)
+For more information see the [docker-compose docs](https://docs.docker.com/compose/reference/build/).
 
 **Parameters**
 * opts, Options (optional)

@@ -56,7 +56,6 @@ Compose.prototype.build = function(opts, callback) {
   // if opts is the callback make callback = opts
   if (typeof opts === 'function') callback = opts;
   let args = [];
-  // change callback to opts here
   if (opts && opts.force_rm) args.push('--force-rm');
   if (opts && opts.no_cache) args.push('--no-cache');
   if (opts && opts.pull) args.push('--pull');
@@ -119,7 +118,14 @@ Compose.prototype.config = function(opts, callback) {
  *                         (default: 10)
  */
 Compose.prototype.down = function(opts, callback) {
-  this.cmd('down', opts, callback);
+  // if opts is the callback make callback = opts
+  if (typeof opts === 'function') callback = opts;
+  let args = [];
+  if (opts && opts.rmi) args.push(`--rmi ${opts.rmi}`);
+  if (opts && opts.volumes) args.push('--volumes');
+  if (opts && opts.remove_orphans) args.push('--remove-orphans');
+  if (opts && opts.timeout) args.push(`--timeout ${opts.timeout}`);
+  this.cmd('down', args, callback);
 }
 
 /**

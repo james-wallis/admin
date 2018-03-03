@@ -3,7 +3,7 @@
 - [x] [build - *Build or rebuild services*](docs/build.md)
 - [ ] bundle - *Generate a Docker bundle from the Compose file*
 - [ ] config - *Validate and view the Compose file*
-- [ ] down - *Stop and remove containers, networks, images, and volumes*
+- [x] [down - *Stop and remove containers, networks, images, and volumes*](docs/down.md)
 - [ ] events - *Receive real time events from containers*
 - [ ] exec - *Execute a command in a running container*
 - [ ] images - *List images*
