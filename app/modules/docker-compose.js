@@ -20,12 +20,14 @@ var Compose = function(opts) {
  * @param {[Strings]} args, (Optional) the list of arguments to add onto the command
  */
 Compose.prototype.cmd = function(command, args, callback) {
+  // If args is callback, make callback equal to args
+  if (typeof args === 'function') callback = args;
   let dc = dockerCompose;
   if (this.file !== '' && this.file) dc += '-f ' + this.file + ' ';
   if (this.project_name !== '' && this.project_name) dc += '-p ' + this.project_name + ' ';
   dc += command;
   // If args has content then split it
-  if (args.length > 0){
+  if (args && args.isArray && args.length > 0){
     args = opts.join(' ');
   // else set args to a blank string so it doesn't mess up the command
   } else {
@@ -86,7 +88,7 @@ Compose.prototype.bundle = function(opts, callback) {
 /**
  * Function to validate and view the docker-compose file
  * @param {Object} opts, Options (optional)
- * @param {Function} callback
+ * @param {Function} callback, A callback function (optional)
  *
  * Command line options:
  * --resolve-image-digests  Pin image tags to digests.
@@ -102,20 +104,7 @@ Compose.prototype.config = function(opts, callback) {
 /**
  * Function to stop and remove containers, networks, images, and volumes
  * @param {Object} opts, Options (optional)
- * @param {Function} callback
- *
- * Command line options:
- * --rmi type              Remove images. Type must be one of:
- *                         'all': Remove all images used by any service.
- *                         'local': Remove only images that don't have a
- *                         custom tag set by the `image` field.
- * -v, --volumes           Remove named volumes declared in the `volumes`
- *                         section of the Compose file and anonymous volumes
- *                         attached to containers.
- * --remove-orphans        Remove containers for services not defined in the
- *                         Compose file
- * -t, --timeout TIMEOUT   Specify a shutdown timeout in seconds.
- *                         (default: 10)
+ * @param {Function} callback, A callback function (optional)
  */
 Compose.prototype.down = function(opts, callback) {
   // if opts is the callback make callback = opts
@@ -128,22 +117,32 @@ Compose.prototype.down = function(opts, callback) {
   this.cmd('down', args, callback);
 }
 
+//
+//
+// Events doesn't work. Case for spawn() instead of exec() ?
+//
+//
+
 /**
- * Function to receive real time events from containers
+ * Function to receive real time events from containers in JSON
  * @param {String} service, the service name to get the event for
- * @param {Object} opts, Options (optional)
- * @param {Function} callback
+ * @param {Function} callback, A callback function (optional)
  */
-Compose.prototype.events = function(service, opts, callback) {
-  let command = 'events --json ' + service;
-  this.cmd(command, opts, callback);
+Compose.prototype.events = function(service, callback) {
+  if (!service || service == '' || typeof service === 'function') {
+    let err = new Error('docker-compose event: \'service\' cannot be empty');
+    ((typeof callback === 'function') ? callback(err) : console.error(err));
+  } else {
+    let command = 'events --json ' + service;
+    this.cmd(command, callback);
+  }
 }
 
 /**
  * Function to execute a command in a running container
  * @param {String} exec, the command to execute
  * @param {Object} opts, Options (optional)
- * @param {Function} callback
+ * @param {Function} callback, A callback function (optional)
  *
  * Command line options:
  * -d                Detached mode: Run command in the background.
@@ -165,7 +164,7 @@ Compose.prototype.exec = function(exec, opts, callback) {
  * Function list images used by created containers
  * Note: pass service name through as an option as its optional
  * @param {Object} opts, Options (optional)
- * @param {Function} callback
+ * @param {Function} callback, A callback function (optional)
  *
  * Command line options:
  * -q     Only display IDs
@@ -177,7 +176,7 @@ Compose.prototype.images = function(opts, callback) {
 /**
  * Function to kill containers
  * @param {Object} opts, Options (optional)
- * @param {Function} callback
+ * @param {Function} callback, A callback function (optional)
  *
  * Command line options:
  * -s SIGNAL         SIGNAL to send to the container.
@@ -191,7 +190,7 @@ Compose.prototype.kill = function(opts, callback) {
  * Function to view the output of containers
  * Note: pass service name through as an option as its optional
  * @param {Object} opts, Options (optional)
- * @param {Function} callback
+ * @param {Function} callback, A callback function (optional)
  *
  * Command line options:
  *  --no-color          Produce monochrome output.
@@ -208,7 +207,7 @@ Compose.prototype.logs = function(opts, callback) {
  * Function to pause services
  * Note: pass service name through as an option as its optional
  * @param {Object} opts, Options (optional)
- * @param {Function} callback
+ * @param {Function} callback, A callback function (optional)
  */
 Compose.prototype.pause = function(opts, callback) {
   this.cmd('pause', opts, callback);
@@ -219,7 +218,7 @@ Compose.prototype.pause = function(opts, callback) {
  * @param {String} service, the service to use
  * @param {Int} port, the private port inside the container
  * @param {Object} opts, Options (optional)
- * @param {Function} callback
+ * @param {Function} callback, A callback function (optional)
  *
  * Command line options:
  * --protocol=proto  tcp or udp [default: tcp]
@@ -233,7 +232,7 @@ Compose.prototype.port = function(service, port, opts, callback) {
 /**
  * Function to list containers
  * @param {Object} opts, Options (optional)
- * @param {Function} callback
+ * @param {Function} callback, A callback function (optional)
  *
  * Command line options:
  *  -q    Only display IDs
@@ -245,7 +244,7 @@ Compose.prototype.ps = function(opts, callback) {
 /**
  * Function to pull images for services defined in the docker-compose file
  * @param {Object} opts, Options (optional)
- * @param {Function} callback
+ * @param {Function} callback, A callback function (optional)
  *
  * Command line options:
  * --ignore-pull-failures  Pull what it can and ignores images with pull failures.
@@ -259,7 +258,7 @@ Compose.prototype.pull = function(opts, callback) {
 /**
  * Function to push images for a service
  * @param {Object} opts, Options (optional)
- * @param {Function} callback
+ * @param {Function} callback, A callback function (optional)
  *
  * Command line options:
  * --ignore-push-failures  Push what it can and ignores images with push failures.
@@ -272,7 +271,7 @@ Compose.prototype.push = function(opts, callback) {
  * Function to restart running containers
  * Note: pass service name through as an option as its optional
  * @param {Object} opts, Options (optional)
- * @param {Function} callback
+ * @param {Function} callback, A callback function (optional)
  *
  * Command line options:
  * -t, --timeout TIMEOUT      Specify a shutdown timeout in seconds.
@@ -285,7 +284,7 @@ Compose.prototype.restart = function(opts, callback) {
 /**
  * Function to remove stopped containers
  * @param {Object} opts, Options (optional)
- * @param {Function} callback
+ * @param {Function} callback, A callback function (optional)
  *
  * Command line options:
  * -f, --force   Don't ask to confirm removal - this should be default for headless
@@ -300,7 +299,7 @@ Compose.prototype.rm = function(opts, callback) {
  * Function to start existing containers
  * Note: pass service name through as an option as its optional
  * @param {Object} opts, Options (optional)
- * @param {Function} callback
+ * @param {Function} callback, A callback function (optional)
  */
 Compose.prototype.start = function(opts, callback) {
   this.cmd('start', opts, callback);
@@ -310,7 +309,7 @@ Compose.prototype.start = function(opts, callback) {
  * Function to stop running containers without removing them
  * Note: pass service name through as an option as its optional
  * @param {Object} opts, Options (optional)
- * @param {Function} callback
+ * @param {Function} callback, A callback function (optional)
  *
  * Command line options:
  * -t, --timeout TIMEOUT      Specify a shutdown timeout in seconds.
@@ -324,7 +323,7 @@ Compose.prototype.stop = function(opts, callback) {
  * Function to get the running processes
  * Note: pass service name through as an option as its optional
  * @param {Object} opts, Options (optional)
- * @param {Function} callback
+ * @param {Function} callback, A callback function (optional)
  */
 Compose.prototype.top = function(opts, callback) {
   this.cmd('top', opts, callback);
@@ -334,7 +333,7 @@ Compose.prototype.top = function(opts, callback) {
  * Function to unpause services
  * Note: pass service name through as an option as its optional
  * @param {Object} opts, Options (optional)
- * @param {Function} callback
+ * @param {Function} callback, A callback function (optional)
  */
 Compose.prototype.unpause = function(opts, callback) {
   this.cmd('unpause', opts, callback);
@@ -344,7 +343,7 @@ Compose.prototype.unpause = function(opts, callback) {
  * Function which builds, (re)creates, starts, and attaches to containers for a service.
  * Note: pass service name through as an option as its optional
  * @param {Object} opts, Options (optional)
- * @param {Function} callback
+ * @param {Function} callback, A callback function (optional)
  *
  * Command line options:
  *  -d                        Detached mode: Run containers in the background,
@@ -380,7 +379,7 @@ Compose.prototype.up = function(opts, callback) {
 /**
  * Function to get the docker-compose version
  * @param {Object} opts, Options (optional)
- * @param {Function} callback
+ * @param {Function} callback, A callback function (optional)
  *
  * Command line options:
  * --short     Shows only Compose's version number.
