@@ -1,6 +1,6 @@
 # Docker-compose NPM Module
 ## Commands
-- [ ] [build - *Build or rebuild services*](docs/build.md)
+- [x] [build - *Build or rebuild services*](docs/build.md)
 - [ ] bundle - *Generate a Docker bundle from the Compose file*
 - [ ] config - *Validate and view the Compose file*
 - [ ] down - *Stop and remove containers, networks, images, and volumes*

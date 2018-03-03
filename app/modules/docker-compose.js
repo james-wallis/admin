@@ -17,27 +17,34 @@ var Compose = function(opts) {
 /**
  * Function to run the docker-compose terminal commands
  * @param {String} command, the docker-compose command to execute
+ * @param {[Strings]} args, (Optional) the list of arguments to add onto the command
  */
-Compose.prototype.cmd = function(command, opts, callback) {
-  console.log(this);
-  return;
+Compose.prototype.cmd = function(command, args, callback) {
   let dc = dockerCompose;
   if (this.file !== '' && this.file) dc += '-f ' + this.file + ' ';
   if (this.project_name !== '' && this.project_name) dc += '-p ' + this.project_name + ' ';
   dc += command;
-  // if opts is a function then assign it to callback
-  if (typeof opts === 'function') {
-    callback = opts;
-  // if opts is an array with a length of more than 0 change it to a string
-  } else if (opts.length > 0){
-    opts = opts.join(' ');
-  // else set opts to a blank string so it doesn't mess up the command
+  // If args has content then split it
+  if (args.length > 0){
+    args = opts.join(' ');
+  // else set args to a blank string so it doesn't mess up the command
   } else {
-    opts = '';
+    args = '';
   }
-  dc += ` ${opts}`;
-  console.log(dc);
-  exec(dc, callback);
+  dc += ` ${args}`;
+  if (callback) {
+    exec(dc, callback);
+  } else {
+    exec(dc, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`docker-compose error: ${error}`);
+        return;
+      }
+      console.log(`docker-compose stdout: ${stdout}`);
+      console.log(`docker-compose stderr: ${stderr}`);
+    });
+  }
+
 }
 
 /**
@@ -46,7 +53,10 @@ Compose.prototype.cmd = function(command, opts, callback) {
  * @param {Function} callback, A callback function (optional)
  */
 Compose.prototype.build = function(opts, callback) {
+  // if opts is the callback make callback = opts
+  if (typeof opts === 'function') callback = opts;
   let args = [];
+  // change callback to opts here
   if (opts && opts.force_rm) args.push('--force-rm');
   if (opts && opts.no_cache) args.push('--no-cache');
   if (opts && opts.pull) args.push('--pull');
