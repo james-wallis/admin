@@ -1,5 +1,6 @@
 const { exec } = require('child_process');
 const path = require('path');
+const yaml = require('js-yaml');
 const dockerCompose = 'docker-compose ';
 
 /**
@@ -20,18 +21,19 @@ var Compose = function(opts) {
  * @param {[Strings]} args, (Optional) the list of arguments to add onto the command
  */
 Compose.prototype.cmd = function(command, args, callback) {
-  // If args is callback, make callback equal to args
-  if (typeof args === 'function') callback = args;
+  // If args is a callback and the callback is not a function (usually undefined)
+  // then make the callback equal to args, otherwise carry on using the defined callback
+  if (typeof args === 'function' && typeof callback !== 'function') {
+    callback = args;
+    args = '';
+  }
   let dc = dockerCompose;
   if (this.file !== '' && this.file) dc += '-f ' + this.file + ' ';
   if (this.project_name !== '' && this.project_name) dc += '-p ' + this.project_name + ' ';
   dc += command;
   // If args has content then split it
-  if (args && args.isArray && args.length > 0){
-    args = opts.join(' ');
-  // else set args to a blank string so it doesn't mess up the command
-  } else {
-    args = '';
+  if (args && args !== '' && args.length > 0){
+    args = args.join(' ');
   }
   dc += ` ${args}`;
   if (callback) {
@@ -89,16 +91,40 @@ Compose.prototype.bundle = function(opts, callback) {
  * Function to validate and view the docker-compose file
  * @param {Object} opts, Options (optional)
  * @param {Function} callback, A callback function (optional)
- *
- * Command line options:
- * --resolve-image-digests  Pin image tags to digests.
- * -q, --quiet              Only validate the configuration, don't print
- *                          anything.
- * --services               Print the service names, one per line.
- * --volumes                Print the volume names, one per line.
  */
 Compose.prototype.config = function(opts, callback) {
-  this.cmd('config', opts, callback);
+  if (typeof opts === 'function') callback = opts;
+  let args = [];
+  if (opts && opts.resolve_image_digests) args.push('--resolve-image-digests');
+  if (opts && opts.quiet) args.push('--quiet');
+  // volumes and services cannot be used together
+  if (opts && opts.services && opts.volumes) {
+    let err = new Error('docker-compose config, the flags \'services\' and \'volumes\' cannot be used together');
+    ((typeof callback === 'function') ? callback(err) : console.error(err));
+  } else {
+    if (opts && opts.services) args.push('--services');
+    if (opts && opts.volumes) args.push('--volumes');
+  }
+  this.cmd('config', args, function(err, stdout, stderr) {
+    if (err) {
+      // If error send the error and stop
+      ((typeof callback === 'function') ? callback(err) : console.error(err));
+    } else {
+      // If no options are given, or no output changing options are given then parse to json
+      if (!opts || (opts && !opts.quiet && !opts.services && !opts.volumes)) {
+        let json = yaml.load(stdout);
+        ((typeof callback === 'function') ? callback(null, json) : console.log(json));
+      } else if (opts.services || opts.volumes) {
+        // If services or volumes flag is given then return as a list
+        let list  = stdout.split("\n");
+        list.pop(list.length-1);
+        ((typeof callback === 'function') ? callback(null, list) : console.log(list));
+      } else {
+        // Default to sending the stdout and stderr
+        ((typeof callback === 'function') ? callback(null, stdout, stderr) : console.log(stdout, stderr));
+      }
+    }
+  });
 }
 
 /**
@@ -385,7 +411,29 @@ Compose.prototype.up = function(opts, callback) {
  * --short     Shows only Compose's version number.
  */
 Compose.prototype.version = function(opts, callback) {
-  this.cmd('version', opts, callback);
+  if (typeof opts === 'function') callback = opts;
+  this.cmd('version', opts, function(err, stdout) {
+    if (err) ((typeof callback === 'function') ? callback(err) : console.error(err));
+    if (stdout) {
+      // Seems to work
+      let string = stdout.replace(/version/g, '');
+      string = string.replace(', build', ', docker_compose_build": "');
+      string = string.replace('docker_compose_build": " ', 'docker_compose_build": "');
+      string = string.replace('docker-compose  ', '"docker-compose": "');
+      string = string.replace(/\n/g, ', ');
+      string = string.replace(/, /g, '", "')
+      string = string.replace(/ : /g, '": "');
+      string = string.replace(/-/g, '_');
+      string = '{' + string + '}';
+      string = string.replace(', "}', '}');
+      let json = JSON.parse(string);
+      ((typeof callback === 'function') ? callback(null, json) : console.log(json));
+    } else {
+      // If we haven't got a stdout then something has gone wrong
+      let err = new Error('no data received');
+      ((typeof callback === 'function') ? callback(err) : console.error(err));
+    }
+  });
 }
 
 module.exports = Compose;
