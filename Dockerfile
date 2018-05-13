@@ -11,6 +11,6 @@ COPY app /app
 ENV PORT=4050
 EXPOSE 4050
 
-COPY test/docker-compose.yaml /app/docker-compose.yaml
+# COPY test/docker-compose.yaml /app/docker-compose.yaml
 
 CMD ["npm", "start"]

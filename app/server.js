@@ -86,6 +86,11 @@ io.on('connection', function(socket) {
   socket.on('dc-pull', function() { compose.pull() });
   socket.on('dc-update', function() { compose.up() });
   socket.on('dc-restart', function() { compose.restart() });
+  socket.on('container-restart', restartContainer);
+  socket.on('container-stop', stopContainer);
+  socket.on('container-remove', removeContainer);
+  socket.on('image-pull', pullImage);
+  socket.on('image-remove', removeImage);
 });
 
 // Function to decide whether to scan Docker depending on the amount of users
@@ -197,6 +202,67 @@ function getDockerContainers() {
   });
 }
 
+// Restart Docker container
+async function restartContainer(name) {
+  try {
+    let container = docker.getContainer(name);
+    await container.restart();
+    scan();
+  } catch(err) {
+    console.log(`Error restarting container ${name}`);
+    console.error(err);
+  }
+}
+
+// Stop Docker container
+async function stopContainer(name) {
+  try {
+    let container = docker.getContainer(name);
+    await container.stop();
+    scan();
+  } catch(err) {
+    console.log(`Error stopping container ${name}`);
+    console.error(err);
+  }
+}
+
+// Remove (force) Docker container
+async function removeContainer(name) {
+  try {
+    let container = docker.getContainer(name);
+    await container.remove({force: true});
+    scan();
+  } catch(err) {
+    console.log(`Error removing container ${name}`);
+    console.error(err);
+  }
+}
+
+// Pull a Docker image (update)
+async function pullImage(names) {
+  try {
+    let images = names.split(',');
+    for (image of images) {
+      await docker.pull(image);
+    }
+  } catch(err) {
+    console.log(`Error pulling image ${name}`);
+    console.error(err);
+  }
+}
+
+// Remove a Docker image (force)
+async function removeImage(names) {
+  try {
+    let images = names.split(',');
+    for (image of images) {
+      await docker.getImage(image).remove();
+    }
+  } catch(err) {
+    console.log(`Error removing image ${name}`);
+    console.error(err);
+  }
+}
 
 // Initial scan
 scan();
